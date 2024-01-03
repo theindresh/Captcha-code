@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Captcha</title>
+    <style>
+        dd {
+            margin-bottom: 15px;
+        }
+    </style>
+    <script>
+        function Captcha() {
+            var a = Math.floor(Math.random() * 10);
+            var b = Math.floor(Math.random() * 10);
+            var c = Math.floor(Math.random() * 10);
+            var d = Math.floor(Math.random() * 10);
+            var e = Math.floor(Math.random() * 10);
+            var f = Math.floor(Math.random() * 10);
+            return `${a} ${b} ${c} ${d} ${e} ${f}`;
+        }
+
+        function LoginClick() {
+            var username = document.getElementById("UserName").value;
+            var password = document.getElementById("Password").value;
+            var msg = document.getElementById("msg");
+            fetch("user.json")
+                .then(function (response) {
+                    return response.json();
+                })
+                .then(function (users) {
+                    var found = users.find(function (user) {
+                        return user.UserName === username && user.Password === password;
+                    });
+                    if (found) {
+                        msg.innerHTML = "<h1>Login Success</h1>";
+                    } else {
+                        msg.innerHTML = "Invalid username or password";
+                    }
+                });
+        }
+
+        function bodyload() {
+            document.getElementById("code").innerHTML = Captcha();
+        }
+
+        function GetNewCode() {
+            document.getElementById("code").innerHTML = Captcha();
+        }
+    </script>
+</head>
+
+<body onload="bodyload()">
+    <fieldset>
+        <legend>Login page</legend>
+        <dl>
+            <dt>User Name</dt>
+            <dd><input type="text" id="UserName"></dd>
+            <dt>Password</dt>
+            <dd><input type="password" id="Password"></dd>
+            <dt>Verify code <button onclick="GetNewCode()">New Code</button></dt>
+            <dd id="code"></dd>
+            <dd><input type="text" size="6"></dd>
+        </dl>
+        <button onclick="LoginClick()">Login</button>
+    </fieldset>
+    <h2 id="msg" style="align-items: center;"></h2>
+</body>
+</html>
